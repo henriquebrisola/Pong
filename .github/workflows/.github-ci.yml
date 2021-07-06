@@ -7,8 +7,8 @@ on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
-      - name: python-flake8
-        uses: julianwachholz/flake8-action@v2.0.0
+    paths:
+      - "**.py"
 
   pull_request:
     branches: [ main ]
@@ -18,6 +18,22 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  lint:
+    name: Python Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: Run flake8
+        uses: julianwachholz/flake8-action@v2
+        with:
+          checkName: "Python Lint"
+          path: path/to/files
+          config: path/to/flake8.ini
+        env:
+          GITHUB_TOKEN: ${{ secrets.python-flake8_TOKEN }}
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
